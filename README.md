@@ -1,4 +1,4 @@
-# baseUrl
+# XYChart
 
 First have to install the relevant packages:
 
