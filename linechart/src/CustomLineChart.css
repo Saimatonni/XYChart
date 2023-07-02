@@ -1,0 +1,6 @@
+.chart-container {
+    display: flex;
+    justify-content: center; /* Align elements at the top */
+    align-items: center;
+    height: 100vh;
+  }
