@@ -18,3 +18,6 @@ In the project directory, you can run:
 
 # BarChart
 <img src="https://github.com/Saimatonni/baseUrl/blob/main/barchart/public/BarChart.png" height="400" />
+
+# LineChart
+<img src="https://github.com/Saimatonni/baseUrl/blob/main/linechart/public/linechart.png" height="400" />
