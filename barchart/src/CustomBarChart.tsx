@@ -59,9 +59,9 @@ CustomBarChartProps) => {
     nice: true,
   });
 
-  const tickValues = Array.from(
+const tickValues = Array.from(
     new Set(yScale.ticks().map((value) => Math.ceil(value * 20) / 10))
-  );
+  ).filter((tick) => tick <= Math.ceil(yScale.domain()[1] * 10) / 10);
 
   // const handleMouseOver = (
   //   event: React.MouseEvent<SVGRectElement, MouseEvent>,
