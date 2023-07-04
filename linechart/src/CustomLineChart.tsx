@@ -99,9 +99,9 @@ CustomLineChartProps) {
     range: [height - margin.bottom, margin.top],
   });
 
-  const tickValues = Array.from(
+const tickValues = Array.from(
     new Set(yScale.ticks().map((value) => Math.ceil(value * 20) / 10))
-  ).filter((tick) => tick <= Math.ceil(yScale.domain()[1] * 10) / 10);
+  ).filter((tick) => tick !== 0 && tick <= Math.ceil(yScale.domain()[1] * 20) / 10);
 
   // const averageValue = lines[0].data.reduce((sum, data) => sum + data.value, 0) / lines[0].data.length;
   const titleAverages = lines.map((line) => {
