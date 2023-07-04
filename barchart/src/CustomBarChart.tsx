@@ -35,12 +35,12 @@ const CustomBarChart = ({
   margin,
 }: // yTicks,
 CustomBarChartProps) => {
-  const [tooltip, setTooltip] = useState<{
-    x: number;
-    y: number;
-    value: number;
-    name: string;
-  } | null>(null);
+  // const [tooltip, setTooltip] = useState<{
+  //   x: number;
+  //   y: number;
+  //   value: number;
+  //   name: string;
+  // } | null>(null);
 
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
@@ -64,18 +64,18 @@ CustomBarChartProps) => {
     (_, i) => (i + 1) / 10
   );
 
-  const handleMouseOver = (
-    event: React.MouseEvent<SVGRectElement, MouseEvent>,
-    value: number,
-    name: string
-  ) => {
-    const { x, y } = event.currentTarget.getBoundingClientRect();
-    setTooltip({ x, y, value, name });
-  };
+  // const handleMouseOver = (
+  //   event: React.MouseEvent<SVGRectElement, MouseEvent>,
+  //   value: number,
+  //   name: string
+  // ) => {
+  //   const { x, y } = event.currentTarget.getBoundingClientRect();
+  //   setTooltip({ x, y, value, name });
+  // };
 
-  const handleMouseLeave = () => {
-    setTooltip(null);
-  };
+  // const handleMouseLeave = () => {
+  //   setTooltip(null);
+  // };
 
   return (
     <>
@@ -85,7 +85,7 @@ CustomBarChartProps) => {
           {chartTitle && <h2>{chartTitle}</h2>}
         </div>
         {/* onMouseLeave={handleMouseLeave} */}
-        <svg width={width} height={height} onMouseLeave={handleMouseLeave}>
+        <svg width={width} height={height}>
           <rect
             x={margin.left}
             y={margin.top}
@@ -102,8 +102,8 @@ CustomBarChartProps) => {
               height={yMax - yScale(d.value)}
               width={xScale.bandwidth()}
               fill={d.color}
-              onMouseOver={(event) => handleMouseOver(event, d.value, d.name)}
-              onMouseLeave={handleMouseLeave}
+              // onMouseOver={(event) => handleMouseOver(event, d.value, d.name)}
+              // onMouseLeave={handleMouseLeave}
             />
           ))}
           {xScale.domain().map((d) => (
@@ -123,7 +123,7 @@ CustomBarChartProps) => {
               </text>
             </g>
           ))}
-          {tickValues.map((tick) => (
+          {/* {tickValues.map((tick) => (
             <g
               key={tick}
               transform={`translate(${margin.left - 10}, ${yScale(tick)})`}
@@ -138,9 +138,22 @@ CustomBarChartProps) => {
                 {tick}
               </text>
             </g>
+          ))} */}
+
+          {yScale.ticks().map((tick) => (
+            <text
+              key={tick}
+              x={margin.left - 10}
+              y={yScale(tick) + margin.top}
+              textAnchor="end"
+              dominantBaseline="middle"
+              fontSize={10}
+            >
+              {tick}
+            </text>
           ))}
 
-          {tooltip && (
+          {/* {tooltip && (
             <g transform={`translate(${tooltip.x - 250}, ${tooltip.y - 100})`}>
               <rect
                 x={-20}
@@ -170,7 +183,7 @@ CustomBarChartProps) => {
                 </tspan>
               </text>
             </g>
-          )}
+          )} */}
         </svg>
       </div>
     </>
