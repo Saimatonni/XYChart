@@ -1,5 +1,5 @@
 # XYChart
-
+ 
 First have to install the relevant packages:
 
 ### `npm install --save @visx/mock-data @visx/group @visx/shape @visx/scale`
