@@ -123,22 +123,7 @@ CustomBarChartProps) => {
               </text>
             </g>
           ))}
-          {/* {tickValues.map((tick) => (
-            <g
-              key={tick}
-              transform={`translate(${margin.left - 10}, ${yScale(tick)})`}
-            >
-              <text
-                x={0}
-                y={margin.top}
-                textAnchor="end"
-                dominantBaseline="middle"
-                fontSize={10}
-              >
-                {tick}
-              </text>
-            </g>
-          ))} */}
+       
 
           {yScale.ticks().map((tick) => (
             <text
