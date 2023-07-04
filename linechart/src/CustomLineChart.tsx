@@ -79,22 +79,11 @@ CustomLineChartProps) {
     setTooltipOpen(false);
   };
 
-  // const yScale = scaleLinear<number>({
-  //   domain: [0, Math.max(...lines.flatMap((line) => line.data.map((d) => d.value)))],
-  //   range: [height - margin.bottom, margin.top],
-  // });
+
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
 
-  // const xScale = scaleBand<string>({
-  //   // domain: lines[0].data.map((d) => d.name),
-  //   domain: lines[0].data.map((d) => d.name),
-  //   // range: [width - margin.right, margin.left],
-  //   // range: [margin.left, width],
-  //   range: [-margin.left - 28, width + 14],
-  //   // range: [width+14,-margin.left-28],
-  //   padding: 1,
-  // });
+
   const xScale = scaleBand<string>({
     domain: xDomain, // Use xDomain prop
     range: [-margin.left - 28, width + 14],
@@ -167,11 +156,6 @@ CustomLineChartProps) {
           stroke="gray"
         />
 
-        {/* <AxisBottom
-          top={height - margin.bottom}
-          scale={xScale}
-          tickFormat={(value) => value}
-        /> */}
 
         <g transform={`translate(0, ${height - margin.bottom})`}>
           {xScale.domain().map((value, index) => (
@@ -188,31 +172,7 @@ CustomLineChartProps) {
           ))}
         </g>
 
-        {/* <AxisRight
-          // top={margin.top}
-          // left={width - margin.right}
-          left={width - margin.right}
-          scale={yScale}
-          numTicks={5}
-          tickFormat={(value) => value.toString()}
-          //tickValues={yRange}
-          // tickValues={tickValues}
-        /> */}
 
-        {/* <g transform={`translate(${width - margin.right}, 0)`}>
-          {tickvalues.map((value, index) => (
-            <text
-              key={index}
-              x={20}
-              y={yScale(value)}
-              textAnchor="end"
-              dominantBaseline="middle"
-              fontSize={10}
-            >
-              {value}
-            </text>
-          ))}
-        </g> */}
 
         <g transform={`translate(${width - margin.right}, 0)`}>
           {tickValues.map((value, index) => (
