@@ -60,8 +60,7 @@ CustomBarChartProps) => {
   });
 
   const tickValues = Array.from(
-    { length: Math.ceil(yMax * 10) },
-    (_, i) => (i + 1) / 10
+    new Set(yScale.ticks().map((value) => Math.ceil(value * 20) / 10))
   );
 
   // const handleMouseOver = (
@@ -123,20 +122,37 @@ CustomBarChartProps) => {
               </text>
             </g>
           ))}
-       
-
-          {yScale.ticks().map((tick) => (
-            <text
+          {/* {tickValues.map((tick) => (
+            <g
               key={tick}
-              x={margin.left - 10}
-              y={yScale(tick) + margin.top}
-              textAnchor="end"
-              dominantBaseline="middle"
-              fontSize={10}
+              transform={`translate(${margin.left - 10}, ${yScale(tick)})`}
             >
-              {tick}
-            </text>
-          ))}
+              <text
+                x={0}
+                y={margin.top}
+                textAnchor="end"
+                dominantBaseline="middle"
+                fontSize={10}
+              >
+                {tick}
+              </text>
+            </g>
+          ))} */}
+
+<g>
+      {tickValues.map((tick, index) => (
+        <text
+          key={index}
+          x={margin.left - 10}
+          y={yScale(tick) + margin.top}
+          textAnchor="end"
+          dominantBaseline="middle"
+          fontSize={10}
+        >
+          {tick}
+        </text>
+      ))}
+    </g>
 
           {/* {tooltip && (
             <g transform={`translate(${tooltip.x - 250}, ${tooltip.y - 100})`}>
