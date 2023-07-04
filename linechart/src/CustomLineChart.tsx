@@ -3,11 +3,10 @@ import { AxisLeft, AxisRight, AxisBottom } from "@visx/axis";
 import { scaleLinear, scaleBand } from "@visx/scale";
 import { LinePath } from "@visx/shape";
 import { Group } from "@visx/group";
-import { withTooltip, Tooltip } from '@visx/tooltip';
-import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip';
+import { withTooltip, Tooltip } from "@visx/tooltip";
+import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
 // import "./CustomLineChart.css";
 import { MouseEvent } from "react";
-
 
 interface DataPoint {
   name: string;
@@ -51,21 +50,24 @@ export function CustomLineChart({
   height,
   margin,
   xDomain,
-  // tooltipOpen,
-  // tooltipLeft,
-  // tooltipTop,
-  // tooltipData,
-  // hideTooltip,
-  // showTooltip,
-}: CustomLineChartProps) {
-
-  const [tooltipData, setTooltipData] = useState<DataPoint | undefined>(undefined);
+}: // tooltipOpen,
+// tooltipLeft,
+// tooltipTop,
+// tooltipData,
+// hideTooltip,
+// showTooltip,
+CustomLineChartProps) {
+  const [tooltipData, setTooltipData] = useState<DataPoint | undefined>(
+    undefined
+  );
   const [tooltipLeft, setTooltipLeft] = useState<number>(0);
   const [tooltipTop, setTooltipTop] = useState<number>(0);
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false);
 
-
-  const showTooltip = (event: React.MouseEvent<SVGPathElement, globalThis.MouseEvent>, data: DataPoint) => {
+  const showTooltip = (
+    event: React.MouseEvent<SVGPathElement, globalThis.MouseEvent>,
+    data: DataPoint
+  ) => {
     const { clientX, clientY } = event;
     setTooltipData(data);
     setTooltipLeft(clientX);
@@ -109,8 +111,7 @@ export function CustomLineChart({
   });
 
   const tickValues = Array.from(
-    { length: Math.ceil(yMax * 10) },
-    (_, i) => (i + 1) / 10
+    new Set(yScale.ticks().map((value) => Math.ceil(value * 10) / 10))
   );
 
   // const averageValue = lines[0].data.reduce((sum, data) => sum + data.value, 0) / lines[0].data.length;
@@ -119,7 +120,6 @@ export function CustomLineChart({
       line.data.reduce((sum, data) => sum + data.value, 0) / line.data.length;
     return { title: line.title, average };
   });
-
 
   // const handleMouseHover = (
   //   event: React.MouseEvent<SVGRectElement, MouseEvent>,
@@ -199,6 +199,21 @@ export function CustomLineChart({
           // tickValues={tickValues}
         /> */}
 
+        {/* <g transform={`translate(${width - margin.right}, 0)`}>
+          {tickvalues.map((value, index) => (
+            <text
+              key={index}
+              x={20}
+              y={yScale(value)}
+              textAnchor="end"
+              dominantBaseline="middle"
+              fontSize={10}
+            >
+              {value}
+            </text>
+          ))}
+        </g> */}
+
         <g transform={`translate(${width - margin.right}, 0)`}>
           {tickValues.map((value, index) => (
             <text
@@ -226,23 +241,23 @@ export function CustomLineChart({
               strokeOpacity={0.8}
               // onMouseMove={(event) => handleMouseHover(event, line.data)}
               // onMouseLeave={handleMouseLeave}
-            onMouseMove={(event) => showTooltip(event, line.data[0])} 
-            onMouseLeave={hideTooltip} 
+              onMouseMove={(event) => showTooltip(event, line.data[0])}
+              onMouseLeave={hideTooltip}
             />
           ))}
         </Group>
 
         {tooltipOpen && tooltipData && (
-        <Tooltip
-          top={tooltipTop}
-          left={tooltipLeft}
-          style={{ backgroundColor: 'white', color: '#333' }}
-        >
-          <strong>{tooltipData.name}</strong>
-          <br />
-          Value: {tooltipData.value.toFixed(2)}
-        </Tooltip>
-      )}
+          <Tooltip
+            top={tooltipTop}
+            left={tooltipLeft}
+            style={{ backgroundColor: "white", color: "#333" }}
+          >
+            <strong>{tooltipData.name}</strong>
+            <br />
+            Value: {tooltipData.value.toFixed(2)}
+          </Tooltip>
+        )}
       </svg>
     </div>
   );
