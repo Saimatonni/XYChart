@@ -100,7 +100,7 @@ CustomLineChartProps) {
   });
 
   const tickValues = Array.from(
-    new Set(yScale.ticks().map((value) => Math.ceil(value * 10) / 10))
+    new Set(yScale.ticks().map((value) => Math.ceil(value * 20) / 10))
   );
 
   // const averageValue = lines[0].data.reduce((sum, data) => sum + data.value, 0) / lines[0].data.length;
