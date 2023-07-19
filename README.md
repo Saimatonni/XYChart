@@ -17,7 +17,7 @@ In the project directory, you can run:
 ### `npm run eject`
 
 # BarChart
-<img src="https://github.com/Saimatonni/XYChart/blob/main/barchart/public/barChart.png" height="400" width="800"/>
+<img src="https://github.com/Saimatonni/XYChart/blob/main/barchart/public/barchart.png" height="400" width="800"/>
 
 # LineChart
-<img src="https://github.com/Saimatonni/baseUrl/blob/main/linechart/public/lineChart.png" height="400" width="800"/>
+<img src="https://github.com/Saimatonni/baseUrl/blob/main/linechart/public/linechart.png" height="400" width="800"/>
