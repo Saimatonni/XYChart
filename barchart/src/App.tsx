@@ -76,24 +76,27 @@ const App = () => {
         data={chartData.data}
         chartTitle={chartData.chartTitle}
         width={400}
-        height={500}
+        height={550}
         margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
+        // chartId="chart1"
         // yTicks={[0.2, 0.4, 0.6, 0.8, 1.0]}
       />
       <CustomBarChart
         data={chartData2.data}
         chartTitle={chartData2.chartTitle}
         width={400}
-        height={500}
+        height={550}
         margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
+        // chartId="chart3"
         // yTicks={[0.2, 0.4, 0.6, 0.8, 1.0]}
       />
       <CustomBarChart
         data={chartData3.data}
         chartTitle={chartData3.chartTitle}
         width={400}
-        height={500}
+        height={550}
         margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
+        // chartId="chart3"
         // yTicks={[0.2, 0.4, 0.6, 0.8, 1.0]}
       />
     </div>

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Bar } from "@visx/shape";
 import { scaleBand, scaleLinear } from "@visx/scale";
 import { AxisLeft, AxisBottom } from "@visx/axis";
+import { Tooltip, defaultStyles } from "@visx/tooltip";
+import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
 import "./CustomBarChart.css";
 
 interface DataPoint {
@@ -24,6 +26,7 @@ interface CustomBarChartProps extends SingleDataPointGraph {
     bottom: number;
     left: number;
   };
+  // chartId: string;
   // yTicks: number[];
 }
 
@@ -33,14 +36,10 @@ const CustomBarChart = ({
   width,
   height,
   margin,
-}: // yTicks,
+}: // chartId, // Receive chartId as a prop
+// yTicks,
 CustomBarChartProps) => {
-  // const [tooltip, setTooltip] = useState<{
-  //   x: number;
-  //   y: number;
-  //   value: number;
-  //   name: string;
-  // } | null>(null);
+  const [tooltipData, setTooltipData] = useState<DataPoint | null>(null);
 
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
@@ -48,7 +47,7 @@ CustomBarChartProps) => {
   const xScale = scaleBand<string>({
     domain: data.map((d) => d.name),
     range: [0, xMax],
-    padding: 0.4,
+    padding: 0.5,
   });
   const yMin = 0;
   const yMaxi = Math.max(...data.map((d) => d.value)) + 0.2;
@@ -59,22 +58,11 @@ CustomBarChartProps) => {
     nice: true,
   });
 
-const tickValues = Array.from(
+  const tickValues = Array.from(
     new Set(yScale.ticks().map((value) => Math.ceil(value * 20) / 10))
-  ).filter((tick) => tick !== 0 && tick <= Math.ceil(yScale.domain()[1] * 10) / 10);
-
-  // const handleMouseOver = (
-  //   event: React.MouseEvent<SVGRectElement, MouseEvent>,
-  //   value: number,
-  //   name: string
-  // ) => {
-  //   const { x, y } = event.currentTarget.getBoundingClientRect();
-  //   setTooltip({ x, y, value, name });
-  // };
-
-  // const handleMouseLeave = () => {
-  //   setTooltip(null);
-  // };
+  ).filter(
+    (tick) => tick !== 0 && tick <= Math.ceil(yScale.domain()[1] * 10) / 10
+  );
 
   return (
     <>
@@ -101,8 +89,8 @@ const tickValues = Array.from(
               height={yMax - yScale(d.value)}
               width={xScale.bandwidth()}
               fill={d.color}
-              // onMouseOver={(event) => handleMouseOver(event, d.value, d.name)}
-              // onMouseLeave={handleMouseLeave}
+              onMouseEnter={() => setTooltipData(d)}
+              onMouseLeave={() => setTooltipData(null)}
             />
           ))}
           {xScale.domain().map((d) => (
@@ -123,53 +111,70 @@ const tickValues = Array.from(
             </g>
           ))}
 
-<g>
-      {tickValues.map((tick, index) => (
-        <text
-          key={index}
-          x={margin.left - 10}
-          y={yScale(tick) + margin.top}
-          textAnchor="end"
-          dominantBaseline="middle"
-          fontSize={10}
-        >
-          {tick}
-        </text>
-      ))}
-    </g>
-
-          {/* {tooltip && (
-            <g transform={`translate(${tooltip.x - 250}, ${tooltip.y - 100})`}>
+          <g>
+            {tickValues.map((tick, index) => (
+              <text
+                key={index}
+                x={margin.left - 10}
+                y={yScale(tick) + margin.top}
+                textAnchor="end"
+                dominantBaseline="middle"
+                fontSize={10}
+              >
+                {tick}
+              </text>
+            ))}
+          </g>
+          {tooltipData && (
+            <g
+              transform={`translate(${
+                margin.left + xScale(tooltipData.name)! + xScale.bandwidth() / 2
+              }, ${margin.top + yScale(tooltipData.value) - 40})`}
+            >
               <rect
-                x={-20}
-                y={-10}
-                width={100}
+                x={-40}
+                y={-30}
+                width={80}
                 height={50}
-                fill="none"
-                stroke="black"
-                strokeWidth={0.1}
+                fill="#f9f9f9"
+                stroke="gray"
+                strokeWidth={1}
+                rx={5}
               />
               <text
-                x={20}
-                y={5}
+                x={0}
+                y={-15}
+                fontSize={10}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fontSize={20}
+                
               >
-                <tspan fontWeight="bold">{tooltip.value}</tspan>
-                <tspan
-                  x={20}
-                  y={20}
-                  fontSize={15}
-                  fill="black"
-                  fontWeight="bold"
-                >
-                  {tooltip.name}
+                <tspan fill={tooltipData.color} fontWeight="bold">{tooltipData.name}</tspan>
+                <tspan x={0} dy={15}>
+                  {tooltipData.value}
                 </tspan>
               </text>
             </g>
-          )} */}
+          )}
         </svg>
+        {/* {tooltipData && (
+          <Tooltip
+            top={margin.top + yScale(tooltipData.value)+100}
+            left={margin.left +190+ xScale(tooltipData.name)! + xScale.bandwidth() / 2}
+            style={{
+              ...defaultStyles,
+              minWidth: 50,
+              textAlign: "center",
+              position: "absolute",
+              zIndex: 1,
+            }}
+          >
+            
+            <strong style={{ color: tooltipData.color }}>{tooltipData.name}</strong>
+            <br />
+            {tooltipData.value}
+          </Tooltip>
+        )} */}
       </div>
     </>
   );
