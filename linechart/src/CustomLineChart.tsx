@@ -81,18 +81,7 @@ const xscale = scalePoint<string>({
   padding: 4, // Set custom padding to 4 when there are 5 or more data points
 });
 
-  // const isDateInDomain = (date: string) => xDomain.includes(date);
-  // const isDateInDomain = (date: string) => {
-  //   for (const line of lines) {
-  //     const foundDataPoint = line.data.find(
-  //       (dataPoint) => dataPoint.name === date
-  //     );
-  //     if (foundDataPoint) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // };
+
 
   const yMin = 0.0;
   const yMaxi =
@@ -176,67 +165,7 @@ const xscale = scalePoint<string>({
           ))}
         </g>
 
-        {/* <Group>
-          {lines.map((line) => (
-            <LinePath
-              key={line.title}
-              // data={line.data}
-              data={customData} // Use the custom data array
-              // x={(d) => xScale(d.name) ?? 0}
-              x={(d) => xScale(d.name)?? 0}
-              y={(d) => yScale(d.value)}
-              stroke={line.color}
-              strokeWidth={2}
-              strokeOpacity={0.8}
-            />
-          ))} */}
 
-        {/* <Group>
-
-          {lines.map((line) => {
-            const customDataForLine: CustomDataPoint[] = xDomain.map((date) => {
-              const dataPoint = line.data.find((d) => d.name === date);
-              return dataPoint ? { ...dataPoint } : { name: date, value: 0 };
-            });
-
-            return (
-              <LinePath
-                key={line.title}
-                data={customDataForLine} // Use the custom data array for each line
-                x={(d) => xScale(d.name) ?? 0}
-                y={(d) => yScale(d.value)}
-                stroke={line.color}
-                strokeWidth={2}
-                strokeOpacity={0.8}
-                curve={curveCardinal}
-              />
-            );
-          })}
-
-         
-          {lines.map((line) =>
-            line.data.map((d, index) => {
-              const date = d.name;
-              if (isDateInDomain(date)) {
-                return (
-                  <g
-                    key={index}
-                    onMouseEnter={() => setTooltipData(d)}
-                    onMouseLeave={() => setTooltipData(null)}
-                  >
-                    <Circle
-                      cx={xScale(date) ?? 0}
-                      cy={yScale(d.value)}
-                      r={3} // Adjust the size of the circles
-                      fill={line.color}
-                    />
-                  </g>
-                );
-              }
-              return null;
-            })
-          )}
-        </Group> */}
 
         <Group>
           {lines.map((line) => {
