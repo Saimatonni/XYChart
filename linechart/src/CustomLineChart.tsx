@@ -215,13 +215,16 @@ const xscale = scalePoint<string>({
             );
           })}
         </Group>
-
-        {tooltipData && (
-          <g
-            transform={`translate(${
-              xscale(tooltipData.name)! + margin.left - 40
-            },${yScale(tooltipData.value) + margin.top - 60})`}
-          >
+{tooltipData && (
+           <g
+           transform={`translate(${
+             xscale(tooltipData.name)! + margin.left - 40
+           },${
+             yScale(tooltipData.value) + margin.top - 60  < 0
+               ? yScale(tooltipData.value) + margin.top + 10
+               : yScale(tooltipData.value) + margin.top - 60
+           })`}
+         >
             {/* Render the tooltip line above the data point */}
 
             <rect
