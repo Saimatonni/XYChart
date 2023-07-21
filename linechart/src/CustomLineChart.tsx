@@ -7,9 +7,23 @@ import { Tooltip, defaultStyles } from "@visx/tooltip";
 import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
 // import "./CustomLineChart.css";
 import { MouseEvent } from "react";
-import { Circle } from "@visx/shape";
+import { Circle, Line } from "@visx/shape";
+import { useRef } from "react";
+import { scalePoint } from "@visx/scale";
+import {
+  curveMonotoneX,
+  curveLinear,
+  curveStep,
+  curveCardinal,
+} from "@visx/curve";
+import { data } from "autoprefixer";
 
 interface DataPoint {
+  name: string;
+  value: number;
+}
+
+interface CustomDataPoint {
   name: string;
   value: number;
 }
@@ -18,6 +32,11 @@ interface LineData {
   title: string;
   color: string;
   data: DataPoint[];
+}
+
+interface Point {
+  x: number;
+  y: number;
 }
 
 interface CustomLineChartProps {
@@ -40,15 +59,40 @@ export function CustomLineChart({
   margin,
   xDomain,
 }: CustomLineChartProps) {
+  const tooltipLineRef = useRef<SVGLineElement>(null);
   const [tooltipData, setTooltipData] = useState<DataPoint | null>(null);
+  const [hoveredDate, setHoveredDate] = useState<string | null>(null);
 
   const xMax = width - margin.left - margin.right;
   const yMax = height - margin.top - margin.bottom;
-  const xScale = scaleBand<string>({
-    domain: xDomain, // Use xDomain prop
-    range: [-margin.left - 28, width + 14],
-    padding: 1,
+
+  const xScale = scalePoint<string>({
+    domain: xDomain,
+    range: [-margin.left - 30, width + 14],
+    padding: 1, // Set custom padding to 4 when there are 5 or more data points
   });
+
+  const allDataPoints = lines.flatMap((line) => line.data);
+const xDataPoints = allDataPoints.map((d) => d.name);
+
+const xscale = scalePoint<string>({
+  domain: xDataPoints,
+  range: [-margin.left - 30, width + 14],
+  padding: 4, // Set custom padding to 4 when there are 5 or more data points
+});
+
+  // const isDateInDomain = (date: string) => xDomain.includes(date);
+  // const isDateInDomain = (date: string) => {
+  //   for (const line of lines) {
+  //     const foundDataPoint = line.data.find(
+  //       (dataPoint) => dataPoint.name === date
+  //     );
+  //     if (foundDataPoint) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // };
 
   const yMin = 0.0;
   const yMaxi =
@@ -132,43 +176,125 @@ export function CustomLineChart({
           ))}
         </g>
 
-        <Group>
+        {/* <Group>
           {lines.map((line) => (
             <LinePath
               key={line.title}
-              data={line.data}
-              x={(d) => xScale(d.name) ?? 0}
+              // data={line.data}
+              data={customData} // Use the custom data array
+              // x={(d) => xScale(d.name) ?? 0}
+              x={(d) => xScale(d.name)?? 0}
               y={(d) => yScale(d.value)}
               stroke={line.color}
               strokeWidth={2}
               strokeOpacity={0.8}
             />
-          ))}
+          ))} */}
 
-          {/* Render circles/points with tooltips */}
+        {/* <Group>
+
+          {lines.map((line) => {
+            const customDataForLine: CustomDataPoint[] = xDomain.map((date) => {
+              const dataPoint = line.data.find((d) => d.name === date);
+              return dataPoint ? { ...dataPoint } : { name: date, value: 0 };
+            });
+
+            return (
+              <LinePath
+                key={line.title}
+                data={customDataForLine} // Use the custom data array for each line
+                x={(d) => xScale(d.name) ?? 0}
+                y={(d) => yScale(d.value)}
+                stroke={line.color}
+                strokeWidth={2}
+                strokeOpacity={0.8}
+                curve={curveCardinal}
+              />
+            );
+          })}
+
+         
           {lines.map((line) =>
-            line.data.map((d, index) => (
-              <g
-                key={index}
-                onMouseEnter={() => setTooltipData(d)}
-                onMouseLeave={() => setTooltipData(null)}
-              >
-                <Circle
-                  cx={xScale(d.name) ?? 0}
-                  cy={yScale(d.value)}
-                  r={3} // Adjust the size of the circles
-                  fill={line.color}
-                />
-              </g>
-            ))
+            line.data.map((d, index) => {
+              const date = d.name;
+              if (isDateInDomain(date)) {
+                return (
+                  <g
+                    key={index}
+                    onMouseEnter={() => setTooltipData(d)}
+                    onMouseLeave={() => setTooltipData(null)}
+                  >
+                    <Circle
+                      cx={xScale(date) ?? 0}
+                      cy={yScale(d.value)}
+                      r={3} // Adjust the size of the circles
+                      fill={line.color}
+                    />
+                  </g>
+                );
+              }
+              return null;
+            })
           )}
+        </Group> */}
+
+        <Group>
+          {lines.map((line) => {
+            const customDataForLine: CustomDataPoint[] = xDomain.map((date) => {
+              const dataPoint = line.data.find((d) => d.name === date);
+              return dataPoint ? { ...dataPoint } : { name: date, value: 0 };
+            });
+            
+
+            return (
+              <>
+                <LinePath
+                  key={line.title}
+                  // data={customDataForLine}
+                  data={line.data}
+                  x={(d) => xscale(d.name) ?? 0}
+                  y={(d) => yScale(d.value)}
+                  stroke={line.color}
+                  strokeWidth={2}
+                  strokeOpacity={0.8}
+                  curve={curveMonotoneX} // Use this to make the curve smooth
+                />
+
+                {lines.map((line) =>
+                  line.data.map((d, index) => {
+                    const date = d.name;
+                    if (date) {
+                      return (
+                        <g
+                          key={index}
+                          onMouseEnter={() => setTooltipData(d)}
+                          onMouseLeave={() => setTooltipData(null)}
+                        >
+                          <Circle
+                            cx={xscale(date) ?? 0}
+                            cy={yScale(d.value)}
+                            r={2} // Adjust the size of the circles
+                            fill={line.color}
+                          />
+                        </g>
+                      );
+                    }
+                    return null;
+                  })
+                )}
+              </>
+            );
+          })}
         </Group>
+
         {tooltipData && (
           <g
-            transform={`translate(${xScale(tooltipData.name)! + margin.left -40},${
-              yScale(tooltipData.value) + margin.top - 60
-            })`}
+            transform={`translate(${
+              xscale(tooltipData.name)! + margin.left - 40
+            },${yScale(tooltipData.value) + margin.top - 60})`}
           >
+            {/* Render the tooltip line above the data point */}
+
             <rect
               x={-40}
               y={-25}
@@ -179,6 +305,14 @@ export function CustomLineChart({
               strokeWidth={2}
               rx={5}
             />
+            {/* <Line
+              from={{ x: xscale.bandwidth() / 2, y: margin.top - 150 }}
+              to={{ x: xScale.bandwidth() / 2, y: margin.bottom + 110 }}
+              stroke="gray"
+              strokeWidth={2}
+              pointerEvents="none"
+            /> */}
+
             <text
               x={0}
               y={-12}
